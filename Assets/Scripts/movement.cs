@@ -23,6 +23,6 @@ public class movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.AddForce(transform.forward * flightSpeed * Time.fixedDeltaTime); 
+        rb.velocity = transform.forward * flightSpeed;
     }
 }
