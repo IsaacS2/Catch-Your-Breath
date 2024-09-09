@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.05
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -637,7 +637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.75
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -675,9 +675,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Flying
       objectReference: {fileID: 0}
+    - target: {fileID: 4856414859943711275, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7fc90de4f727a46459fd2c6b15efb95e, type: 2}
     - target: {fileID: 5465940246521907071, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 2.84924
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
       propertyPath: m_Controller
@@ -685,11 +689,27 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: e7d5ee4f439199c438ff43259cd654b1, type: 2}
     - target: {fileID: 5866666021909216657, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6250190495565672215, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6250190495565672215, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6250190495565672215, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6250190495565672215, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6250190495565672215, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -707,6 +727,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1027647056}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1027647060}
   m_SourcePrefab: {fileID: 100100000, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
 --- !u!1 &1027647054 stripped
 GameObject:
@@ -732,8 +755,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.1522436, y: 1.7549927, z: 4.933306}
-  m_Center: {x: 0.25525045, y: 1.0954115, z: 0.035634756}
+  m_Size: {x: 1.9590311, y: 1.7549927, z: 4.933306}
+  m_Center: {x: 0.1586442, y: 3, z: 0.035634756}
 --- !u!114 &1027647056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -747,7 +770,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flightSpeed: 11
+  turnSpeed: 10
+  maxHorizontalTurn: 0
+  maxVerticalTurn: 0
+  rotateTime: 0
   breathValue: 0
+  turning: {fileID: -871450375345963039, guid: daf002a78b9475046b7c4f8f7f5e3b56, type: 3}
+  breathing: {fileID: -665945016462528474, guid: daf002a78b9475046b7c4f8f7f5e3b56, type: 3}
 --- !u!54 &1027647057
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -780,6 +809,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e2860c24b9108b44ab97b34832c32db9, type: 3}
   m_PrefabInstance: {fileID: 1027647053}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1027647060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027647054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: daf002a78b9475046b7c4f8f7f5e3b56, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Flying
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1085003238
 GameObject:
   m_ObjectHideFlags: 0
