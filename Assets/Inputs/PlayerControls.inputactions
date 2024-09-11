@@ -15,24 +15,44 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Breathing",
-                    "type": "Button",
+                    "name": "BreathIn",
+                    "type": "Value",
                     "id": "0d460bc0-dda9-4a6b-8b0e-868760ad3e5a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "BreathOut",
+                    "type": "Value",
+                    "id": "c156641c-e7c7-4e77-83a7-b5aa23ed91c7",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "01a35952-e669-466d-9e87-b744c0fd4355",
-                    "path": "",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Breathing",
+                    "action": "BreathIn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57c5f968-1bda-4c5c-a283-7c28e5058961",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BreathIn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -145,6 +165,28 @@
                     "action": "Turning",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "8e175f8f-5e1d-4e97-9c05-49cfc16a7843",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BreathOut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c97781a5-a994-4051-9e9f-295c0ab80b49",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BreathOut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
