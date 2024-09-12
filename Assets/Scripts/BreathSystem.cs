@@ -13,6 +13,7 @@ public class BreathSystem : MonoBehaviour
     [SerializeField] private Color strongBreathIndicator, weakBreathIndicator, inhaleColor, holdColor, exhaleColor;
 
     public event Action<float> OnBreathComplete = (_breathMultiplier) => { };
+    private ParticleSystem niceBreath;
     private float[] ringHeights; // heights of rings will be used to determine input accuracy
     private Image[] ringImages; // heights of rings will be used to determine input accuracy
     private Vector2 breathStartSize;
@@ -31,6 +32,7 @@ public class BreathSystem : MonoBehaviour
     private void Start()
     {
         breathingState = BreathStates.Idle;  // player starts out not breathing
+        niceBreath = GetComponent<ParticleSystem>();
         RectTransform initialBreathRect = (RectTransform)breathRing.transform;
         breathStartSize = initialBreathRect.sizeDelta;
         ringHeights = new float[segments + 1];
@@ -207,6 +209,7 @@ public class BreathSystem : MonoBehaviour
                 breathOutMultiplier = (1f / 3f) * (breathDivisor / breathStartSize.y);
                 breathlessTimer = 0;  // got adequate breathing in
                 OnBreathComplete(1.5f + breathInMultiplier + breathOutMultiplier + holdingMultiplier);
+                niceBreath.Play();
             }
             else
             {
