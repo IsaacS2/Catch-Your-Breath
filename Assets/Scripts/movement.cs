@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class movement : MonoBehaviour
+public class Movement : MonoBehaviour
 {
-    [SerializeField] private float flightSpeed, turnSpeed, maxHorizontalTurn, maxVerticalTurn, rotateTime, breathValue;
-    [SerializeField] private InputActionReference turning, breathing;
+    [SerializeField] private float flightSpeed, originalTurnSpeed;
+    [SerializeField] private InputActionReference turning;
+    [SerializeField] private BreathSystem lungs;
 
+    private Vector3 startRotation;
     private Vector2 turnDirection;
-    private float currentRotation;
+    private float currentTurnSpeed;
     private Rigidbody rb;
 
     private void OnEnable()
     {
-        
+        lungs.OnBreathComplete += IncreaseDirectionalSpeed;
+        startRotation = transform.eulerAngles;
+        currentTurnSpeed = originalTurnSpeed;
     }
 
     void Start()
@@ -22,19 +26,25 @@ public class movement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //transform.rotation = Quaternion.Slerp(currentRotation, , rotateTime);
-        //timeCount = timeCount + Time.deltaTime;
-
-        turnDirection = turning.action.ReadValue<Vector2>() * turnSpeed;
+        turnDirection = turning.action.ReadValue<Vector2>() * currentTurnSpeed;
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = (transform.forward * flightSpeed) + new Vector3(turnDirection.x, turnDirection.y, 0);
+        //
+        // moves player in local xy plane
+        //
+        rb.velocity = (transform.forward * flightSpeed) 
+            + (turnDirection.x * transform.right) 
+            + (turnDirection.y * transform.up);
     }
 
+    private void IncreaseDirectionalSpeed(float _breathMultiplier)
+    {
+        currentTurnSpeed = originalTurnSpeed * _breathMultiplier;
 
+        Debug.Log("Speed change: " + currentTurnSpeed);
+    }
 }
