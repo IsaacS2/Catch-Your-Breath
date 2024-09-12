@@ -22,9 +22,9 @@ public class BreathSystem : MonoBehaviour
     private void OnEnable()
     {
         breathIn.action.started += BreathIn;
-        breathIn.action.performed += HoldBreath;
+        breathIn.action.canceled += HoldBreath;
         breathOut.action.started += BreathOut;
-        breathOut.action.performed += StopBreath;
+        breathOut.action.canceled += StopBreath;
     }
 
     private void Start()
@@ -105,6 +105,7 @@ public class BreathSystem : MonoBehaviour
             if (newBreathSize.y > ringHeights[ringHeights.Length - 1])  // too much air inhaled
             {
                 breathingState = BreathStates.Idle;
+                SetBreathUI(false);
             }
         }
         else
@@ -131,11 +132,11 @@ public class BreathSystem : MonoBehaviour
             if (currentBreathHeight < ringHeights[0])
             {
                 breathingState = BreathStates.Idle;  // breathed in too quickly (not enough air)
-                breath.color = holdColor;
                 SetBreathUI(false);
             }
             else
             {
+                breath.color = holdColor;
                 float breathDivisor = breathStartSize.y - Mathf.Abs(currentBreathHeight - breathStartSize.y);
                 breathInMultiplier = (1 / 3) * (breathDivisor / breathStartSize.y);
             }
@@ -152,10 +153,10 @@ public class BreathSystem : MonoBehaviour
             {
                 breathingState = BreathStates.Idle;  // released breath in too quickly
                 SetBreathUI(false);
-                breath.color = exhaleColor;
             }
             else
             {
+                breath.color = exhaleColor;
                 float breathDivisor = breathStartSize.y - Mathf.Abs(currentBreathHeight - breathStartSize.y);
                 holdingMultiplier = (1 / 3) * (breathDivisor / breathStartSize.y);
             }
@@ -181,7 +182,7 @@ public class BreathSystem : MonoBehaviour
                 OnBreathComplete(1 + breathInMultiplier + breathOutMultiplier + holdingMultiplier);
             }
             breathStageTimer = 0;
-            SetBreathUI(true);
+            SetBreathUI(false);
         }
     }
 
