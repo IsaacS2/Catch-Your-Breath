@@ -7,7 +7,7 @@ public class BreathSystem : MonoBehaviour
 {
     [SerializeField] private InputActionReference breathIn, breathOut;
     [SerializeField] private float maxBreathlessTime, breathStageBestTime, segmentPercent, speedRevertTime, reducedSpeedTime, minStableBreathTime;
-    [SerializeField] private int segments, windedState;
+    [SerializeField] private int segments;
     [SerializeField] private Image breathRing;
     [SerializeField] private Image breath;
     [SerializeField] private Color strongBreathIndicator, weakBreathIndicator, inhaleColor, holdColor, exhaleColor;
@@ -17,6 +17,7 @@ public class BreathSystem : MonoBehaviour
     private Image[] ringImages; // heights of rings will be used to determine input accuracy
     private Vector2 breathStartSize;
     private float breathlessTimer, finishedBreathTimer, breathStageTimer, breathInMultiplier, holdingMultiplier, breathOutMultiplier;
+    private int windedState;
     private BreathStates breathingState;
 
     private void OnEnable()
