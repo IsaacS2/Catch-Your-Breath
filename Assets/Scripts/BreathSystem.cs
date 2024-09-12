@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BreathSystem : MonoBehaviour
 {
     [SerializeField] private InputActionReference breathIn, breathOut;
-    [SerializeField] private float maxBreathlessTime, breathStageBestTime, segmentPercent, speedRevertTime, reducedSpeedTime, minStableBreathTime;
+    [SerializeField] private float maxBreathlessTime, breathStageBestTime, segmentPercent, speedRevertTime, reducedSpeedTime, minStableBreathTime, boostMultiplier;
     [SerializeField] private int segments;
     [SerializeField] private Image breathRing;
     [SerializeField] private Image breath;
@@ -32,6 +32,7 @@ public class BreathSystem : MonoBehaviour
     private void Start()
     {
         breathingState = BreathStates.Idle;  // player starts out not breathing
+        breathlessTimer = minStableBreathTime;
         niceBreath = GetComponent<ParticleSystem>();
         RectTransform initialBreathRect = (RectTransform)breathRing.transform;
         breathStartSize = initialBreathRect.sizeDelta;
@@ -55,7 +56,6 @@ public class BreathSystem : MonoBehaviour
 
         Vector2 firstRingSize = new Vector2(breathStartSize.x - ((((float)segments / 2) * segmentPercent) * breathStartSize.x), 
             breathStartSize.y - ((((float)segments / 2) * segmentPercent) * breathStartSize.y));
-        Debug.Log(firstRingSize);
 
         for (int i = 0; i < segments + 1; i++)
         {
@@ -204,11 +204,10 @@ public class BreathSystem : MonoBehaviour
 
             if (currentBreathHeight >= ringHeights[0])
             {
-                Debug.Log("Successful breathing");
                 float breathDivisor = breathStartSize.y - Mathf.Abs(currentBreathHeight - breathStartSize.y);
                 breathOutMultiplier = (1f / 3f) * (breathDivisor / breathStartSize.y);
                 breathlessTimer = 0;  // got adequate breathing in
-                OnBreathComplete(1.5f + breathInMultiplier + breathOutMultiplier + holdingMultiplier);
+                OnBreathComplete((1f + breathInMultiplier + breathOutMultiplier + holdingMultiplier) * boostMultiplier);
                 niceBreath.Play();
             }
             else
