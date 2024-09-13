@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BreathSystem : MonoBehaviour
@@ -27,6 +28,14 @@ public class BreathSystem : MonoBehaviour
         breathIn.action.canceled += HoldBreath;
         breathOut.action.started += BreathOut;
         breathOut.action.canceled += StopBreath;
+    }
+
+    private void OnDisable()
+    {
+        breathIn.action.started -= BreathIn;
+        breathIn.action.canceled -= HoldBreath;
+        breathOut.action.started -= BreathOut;
+        breathOut.action.canceled -= StopBreath;
     }
 
     private void Start()
@@ -98,6 +107,7 @@ public class BreathSystem : MonoBehaviour
         
         if (breathlessTimer > maxBreathlessTime && windedState < 3)  // couldn't breath properly for too long
         {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);  // player woke up, reload the scene
             windedState = 3;
         }
         else if (breathlessTimer > reducedSpeedTime && windedState < 2)  // hasn't breathed properly for a while
@@ -106,7 +116,7 @@ public class BreathSystem : MonoBehaviour
             OnBreathComplete(0.75f);
             windedState = 2;
         }
-        else if (breathlessTimer > speedRevertTime && windedState <= 0) // lost directional speed boost
+        else if (breathlessTimer > speedRevertTime && windedState < 1) // lost directional speed boost
         {
             Debug.Log("lost speed (should probably start breathing again)");
             OnBreathComplete(1);
@@ -122,6 +132,8 @@ public class BreathSystem : MonoBehaviour
             if (newBreathSize.y > ringHeights[ringHeights.Length - 1])  // too much air inhaled
             {
                 breathingState = BreathStates.Idle;
+                breathStageTimer = 0;
+                OnBreathComplete(1);
                 SetBreathUI(false);
             }
         }

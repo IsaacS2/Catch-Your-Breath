@@ -6,6 +6,9 @@ public class Checkpoint : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.Instance.setCheckpoint(gameObject.transform.position);
+        if (other.gameObject.CompareTag("Player")) {
+            GameManager.Instance.setCheckpoint(gameObject.transform.position);
+            Destroy(gameObject);
+        }
     }
 }

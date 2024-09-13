@@ -21,6 +21,11 @@ public class Movement : MonoBehaviour
         currentTurnSpeed = originalTurnSpeed;
     }
 
+    private void OnDisable()
+    {
+        lungs.OnBreathComplete -= IncreaseDirectionalSpeed;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
