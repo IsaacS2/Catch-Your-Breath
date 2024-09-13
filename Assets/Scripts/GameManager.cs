@@ -12,14 +12,17 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Loading game manager");
         if (Instance != null && Instance != this)
         {
-            Destroy(Instance.gameObject);
+            Destroy(gameObject);
         }
 
-        Instance = this;
+        else {
+            Instance = this;
 
-        DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(Instance.gameObject);
+        }
     }
 
     private void OnEnable()
