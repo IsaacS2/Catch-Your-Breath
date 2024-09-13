@@ -23584,13 +23584,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flightSpeed: 11
-  turnSpeed: 10
-  maxHorizontalTurn: 0
-  maxVerticalTurn: 0
-  rotateTime: 0
-  breathValue: 0
+  originalTurnSpeed: 0
   turning: {fileID: -871450375345963039, guid: daf002a78b9475046b7c4f8f7f5e3b56, type: 3}
-  breathing: {fileID: -665945016462528474, guid: daf002a78b9475046b7c4f8f7f5e3b56, type: 3}
+  lungs: {fileID: 0}
 --- !u!54 &1658097937
 Rigidbody:
   m_ObjectHideFlags: 0
