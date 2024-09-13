@@ -14,10 +14,12 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(Instance);
+            Destroy(Instance.gameObject);
         }
 
         Instance = this;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
@@ -32,11 +34,13 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log("moving player at " + currentCheckpointPosition);
         player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
         {
             player.transform.position = currentCheckpointPosition != Vector3.zero ? currentCheckpointPosition : player.transform.position;
+            Debug.Log("player's new location: " + player.transform.position);
         }
     }
 

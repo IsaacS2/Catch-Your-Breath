@@ -49,7 +49,5 @@ public class Movement : MonoBehaviour
     private void IncreaseDirectionalSpeed(float _breathMultiplier)
     {
         currentTurnSpeed = originalTurnSpeed * _breathMultiplier;
-
-        Debug.Log("Speed change: " + currentTurnSpeed);
     }
 }
