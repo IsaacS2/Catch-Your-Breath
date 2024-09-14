@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using FMODUnity;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private int numLevelSegments;
+
     public static GameManager Instance;
 
     private GameObject player;
     private Vector3 currentCheckpointPosition;
+    private int currentCheckpointValue = 0;
 
     private void Awake()
     {
-        Debug.Log("Loading game manager");
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -37,18 +40,36 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("moving player at " + currentCheckpointPosition);
         player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
         {
             player.transform.position = currentCheckpointPosition != Vector3.zero ? currentCheckpointPosition : player.transform.position;
-            Debug.Log("player's new location: " + player.transform.position);
+        }
+    }
+
+    private void Update()
+    {
+        var emitter = GetComponent<StudioEventEmitter>();
+        if (emitter != null) {
+            emitter.SetParameter(name: "Checkpoint", Mathf.Min(currentCheckpointValue, numLevelSegments - 1));
         }
     }
 
     public void setCheckpoint(Vector3 _newCheckpoint)
     {
+        if (_newCheckpoint != currentCheckpointPosition)  // new checkpoint found, increment value for fmod
+        {
+            currentCheckpointValue++;
+            Debug.Log("Latest checkpoint: " + currentCheckpointValue);
+        }
+
         currentCheckpointPosition = _newCheckpoint;
+    }
+
+    public void ResetValues()
+    {
+        currentCheckpointPosition = Vector3.zero;
+        currentCheckpointValue = 0;
     }
 }

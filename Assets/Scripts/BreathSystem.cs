@@ -36,6 +36,7 @@ public class BreathSystem : MonoBehaviour
         breathIn.action.canceled -= HoldBreath;
         breathOut.action.started -= BreathOut;
         breathOut.action.canceled -= StopBreath;
+        breathOut.action.canceled -= StopBreath;
     }
 
     private void Start()
