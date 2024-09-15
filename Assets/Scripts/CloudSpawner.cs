@@ -11,11 +11,21 @@ public class CloudSpawner : MonoBehaviour
         minYPosition, maxYPosition, minZPosition, maxZPosition, spawnTime;
     [SerializeField] private Texture[] textureOptions;
 
-    private Vector3 sideVector, upVector;
-    private float spawnTimer;
+    private Transform playerTransform;
+    private Vector3 sideVector, upVector, startingPosition;
+    private float spawnTimer, forwardDistanceFromPlayer;
 
-    private void Start()
+    private void Awake()
     {
+        startingPosition = transform.position;
+
+        var playerObject = GameObject.FindWithTag("Player");
+        if (playerObject != null)
+        {
+            playerTransform = playerObject.transform;
+            forwardDistanceFromPlayer = startingPosition.x - playerTransform.position.x;
+        }
+
         spawnTimer = spawnTime;
 
         if (horizontalVariety)
@@ -31,6 +41,12 @@ public class CloudSpawner : MonoBehaviour
     private void Update()
     {
         spawnTimer += Time.deltaTime;
+
+        // move cloud spawner away from player
+        if (playerTransform != null) 
+        {
+            transform.position = new Vector3(forwardDistanceFromPlayer + playerTransform.position.x, startingPosition.y, startingPosition.z);
+        }
 
         if (cloud != null && spawnTimer > spawnTime)
         {  // gameobject provided to duplicate
