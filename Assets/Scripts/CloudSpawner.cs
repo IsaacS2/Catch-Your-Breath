@@ -65,7 +65,6 @@ public class CloudSpawner : MonoBehaviour
 
                 // cloud's material can be altered
                 Material cloudMaterial = newCloud.GetComponent<Material>();
-                Debug.Log(cloudMaterial);
                 /*if (textureOptions.Length > 0 && cloudMaterial)
                 {
                     Debug.Log("Changing texture");

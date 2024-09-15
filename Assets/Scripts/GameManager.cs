@@ -61,7 +61,6 @@ public class GameManager : MonoBehaviour
         if (_newCheckpoint != currentCheckpointPosition)  // new checkpoint found, increment value for fmod
         {
             currentCheckpointValue++;
-            Debug.Log("Latest checkpoint: " + currentCheckpointValue);
         }
 
         currentCheckpointPosition = _newCheckpoint;

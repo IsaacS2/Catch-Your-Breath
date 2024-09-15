@@ -17,11 +17,6 @@ public class Cloud : MonoBehaviour
 
     void Update()
     {
-        /*if (!rend.isVisible)
-        {
-            Destroy(this.gameObject);
-        }*/
-
         transform.Translate(Vector3.right * speed * Time.deltaTime);
         travelDistance += Time.deltaTime;
 

@@ -9,16 +9,16 @@ public class BreathSystem : MonoBehaviour
     [SerializeField] private InputActionReference breathIn, breathOut;
     [SerializeField] private float maxBreathlessTime, breathStageBestTime, segmentPercent, speedRevertTime, reducedSpeedTime, minStableBreathTime, boostMultiplier;
     [SerializeField] private int segments;
-    [SerializeField] private Image breathRing;
-    [SerializeField] private Image breath;
+    [SerializeField] private Image breathRing, breath;
     [SerializeField] private Color strongBreathIndicator, weakBreathIndicator, inhaleColor, holdColor, exhaleColor;
 
     public event Action<float> OnBreathComplete = (_breathMultiplier) => { };
+    public event Action<float> OnBreathStart = (_breathMultiplier) => { };
     private ParticleSystem niceBreath;
     private float[] ringHeights; // heights of rings will be used to determine input accuracy
     private Image[] ringImages; // heights of rings will be used to determine input accuracy
     private Vector2 breathStartSize;
-    private float breathlessTimer, finishedBreathTimer, breathStageTimer, breathInMultiplier, holdingMultiplier, breathOutMultiplier;
+    private float breathlessTimer, breathCoolDownTimer, breathStageTimer, breathInMultiplier, holdingMultiplier, breathOutMultiplier;
     private int windedState;
     private BreathStates breathingState;
 
@@ -36,13 +36,13 @@ public class BreathSystem : MonoBehaviour
         breathIn.action.canceled -= HoldBreath;
         breathOut.action.started -= BreathOut;
         breathOut.action.canceled -= StopBreath;
-        breathOut.action.canceled -= StopBreath;
     }
 
     private void Start()
     {
         breathingState = BreathStates.Idle;  // player starts out not breathing
-        breathlessTimer = minStableBreathTime;
+        breathlessTimer = 0;
+        breathCoolDownTimer = minStableBreathTime;
         niceBreath = GetComponent<ParticleSystem>();
         RectTransform initialBreathRect = (RectTransform)breathRing.transform;
         breathStartSize = initialBreathRect.sizeDelta;
@@ -91,20 +91,17 @@ public class BreathSystem : MonoBehaviour
         {
             Color newRingColor = Color.Lerp(weakBreathIndicator, strongBreathIndicator, (float)i + 1 / (float)halfSegments);
             ringImages[i].color = newRingColor;
-            //ringImages[i].gameObject.SetActive(false);
         }
         for (int i = segments; i >= (segments + 1) / 2; i--)
         {
             Color newRingColor = Color.Lerp(strongBreathIndicator, weakBreathIndicator, (float)(i - halfSegments) / (float)halfSegments);
             ringImages[i].color = newRingColor;
-            //ringImages[i].gameObject.SetActive(false);
         }
     }
 
     private void Update()
     {
-        breathlessTimer += Time.deltaTime;
-        finishedBreathTimer += Time.deltaTime;
+        breathCoolDownTimer += Time.deltaTime;
         
         if (breathlessTimer > maxBreathlessTime && windedState < 3)  // couldn't breath properly for too long
         {
@@ -114,7 +111,7 @@ public class BreathSystem : MonoBehaviour
         else if (breathlessTimer > reducedSpeedTime && windedState < 2)  // hasn't breathed properly for a while
         {
             Debug.Log("need to breath");
-            OnBreathComplete(0.75f);
+            OnBreathComplete(0.5f);
             windedState = 2;
         }
         else if (breathlessTimer > speedRevertTime && windedState < 1) // lost directional speed boost
@@ -133,6 +130,7 @@ public class BreathSystem : MonoBehaviour
             if (newBreathSize.y > ringHeights[ringHeights.Length - 1])  // too much air inhaled
             {
                 breathingState = BreathStates.Idle;
+                breathCoolDownTimer = 0;
                 breathStageTimer = 0;
                 OnBreathComplete(1);
                 SetBreathUI(false);
@@ -148,7 +146,8 @@ public class BreathSystem : MonoBehaviour
     {
         if (breathingState == BreathStates.Idle)
         {
-            if (breathlessTimer >= minStableBreathTime) {
+            if (breathCoolDownTimer >= minStableBreathTime) {
+                OnBreathStart(1);
                 breathingState = BreathStates.BreathingIn;
                 breath.color = inhaleColor;
                 SetBreathUI(true);
@@ -156,6 +155,7 @@ public class BreathSystem : MonoBehaviour
             else // trying to start box-breathing again too soon
             {
                 Debug.Log("Breathing too fast!");
+                breathCoolDownTimer = 0;
                 OnBreathComplete(0.75f);
             }
         }
@@ -169,6 +169,7 @@ public class BreathSystem : MonoBehaviour
 
             if (currentBreathHeight < ringHeights[0])
             {
+                breathCoolDownTimer = 0;
                 breathingState = BreathStates.Idle;  // breathed in too quickly (not enough air)
                 OnBreathComplete(1);
                 SetBreathUI(false);
@@ -193,6 +194,7 @@ public class BreathSystem : MonoBehaviour
 
             if (currentBreathHeight < ringHeights[0])
             {
+                breathCoolDownTimer = 0;
                 OnBreathComplete(1);
                 breathingState = BreathStates.Idle;  // released breath in too quickly
                 SetBreathUI(false);
@@ -220,7 +222,7 @@ public class BreathSystem : MonoBehaviour
                 float breathDivisor = breathStartSize.y - Mathf.Abs(currentBreathHeight - breathStartSize.y);
                 breathOutMultiplier = (1f / 3f) * (breathDivisor / breathStartSize.y);
                 breathlessTimer = 0;  // got adequate breathing in
-                OnBreathComplete((1f + breathInMultiplier + breathOutMultiplier + holdingMultiplier) * boostMultiplier);
+                OnBreathComplete(1f + (breathInMultiplier + breathOutMultiplier + holdingMultiplier * boostMultiplier));
                 niceBreath.Play();
             }
             else
@@ -229,6 +231,7 @@ public class BreathSystem : MonoBehaviour
             }
 
             breathingState = BreathStates.Idle;
+            breathCoolDownTimer = 0;
             windedState = 0;
             breathStageTimer = 0;
             SetBreathUI(false);

@@ -17,6 +17,7 @@ public class Movement : MonoBehaviour
     private void OnEnable()
     {
         lungs.OnBreathComplete += IncreaseDirectionalSpeed;
+        lungs.OnBreathStart += IncreaseOrMaintainDirectionSpeed;
         startRotation = transform.eulerAngles;
         currentTurnSpeed = originalTurnSpeed;
     }
@@ -24,6 +25,7 @@ public class Movement : MonoBehaviour
     private void OnDisable()
     {
         lungs.OnBreathComplete -= IncreaseDirectionalSpeed;
+        lungs.OnBreathStart += IncreaseOrMaintainDirectionSpeed;
     }
 
     void Start()
@@ -49,5 +51,10 @@ public class Movement : MonoBehaviour
     private void IncreaseDirectionalSpeed(float _breathMultiplier)
     {
         currentTurnSpeed = originalTurnSpeed * _breathMultiplier;
+    }
+
+    private void IncreaseOrMaintainDirectionSpeed(float _breathMultiplier)
+    {
+        currentTurnSpeed = Mathf.Max(currentTurnSpeed, originalTurnSpeed * _breathMultiplier);
     }
 }
