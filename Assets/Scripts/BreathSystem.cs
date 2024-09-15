@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class BreathSystem : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class BreathSystem : MonoBehaviour
     [SerializeField] private float maxBreathlessTime, breathStageBestTime, segmentPercent, speedRevertTime, reducedSpeedTime, minStableBreathTime, boostMultiplier;
     [SerializeField] private int segments;
     [SerializeField] private Image breathRing, breath;
+    [SerializeField] private TextMeshProUGUI messenger;
     [SerializeField] private Color strongBreathIndicator, weakBreathIndicator, inhaleColor, holdColor, exhaleColor;
 
     public event Action<float> OnBreathComplete = (_breathMultiplier) => { };
@@ -110,13 +112,13 @@ public class BreathSystem : MonoBehaviour
         }
         else if (breathlessTimer > reducedSpeedTime && windedState < 2)  // hasn't breathed properly for a while
         {
-            Debug.Log("need to breath");
+            ShowMessage("need to breath...");
             OnBreathComplete(0.5f);
             windedState = 2;
         }
         else if (breathlessTimer > speedRevertTime && windedState < 1) // lost directional speed boost
         {
-            Debug.Log("lost speed (should probably start breathing again)");
+            ShowMessage("lost speed boost (should start breathing soon)");
             OnBreathComplete(1);
             windedState = 1;
         }
@@ -154,7 +156,7 @@ public class BreathSystem : MonoBehaviour
             }
             else // trying to start box-breathing again too soon
             {
-                Debug.Log("Breathing too fast!");
+                ShowMessage("Breathing too fast!");
                 breathCoolDownTimer = 0;
                 OnBreathComplete(0.75f);
             }
@@ -224,6 +226,7 @@ public class BreathSystem : MonoBehaviour
                 breathlessTimer = 0;  // got adequate breathing in
                 OnBreathComplete(1f + (breathInMultiplier + breathOutMultiplier + holdingMultiplier * boostMultiplier));
                 niceBreath.Play();
+                ShowMessage("");
             }
             else
             {
@@ -247,5 +250,10 @@ public class BreathSystem : MonoBehaviour
         {
             ring.gameObject.SetActive(activate);
         }
+    }
+
+    private void ShowMessage(string _message)
+    {
+        messenger.text = _message;
     }
 }
