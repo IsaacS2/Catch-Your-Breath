@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (SceneManager.GetActiveScene().name != "LevelClone_3")
+        {
+            Debug.Log("Values Reset!");
+            ResetValues();
+        }
+
         player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)

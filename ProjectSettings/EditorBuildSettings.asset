@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelClone.unity
     guid: fd165ec00c11cc1429fafe1b9e6700c5
   - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: c67cfd29f5a3cdb4b82afcadde4fd7a0
+  - enabled: 1
     path: Assets/Scenes/LevelClone_3.unity
     guid: b74ff4fc631cd9542bb89cd243a1e27e
   - enabled: 1

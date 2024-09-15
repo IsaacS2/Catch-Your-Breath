@@ -107,7 +107,16 @@ public class BreathSystem : MonoBehaviour
         
         if (breathlessTimer > maxBreathlessTime && windedState < 3)  // couldn't breath properly for too long
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);  // player woke up, reload the scene
+            WakeUp playerWakeUp = GetComponent<WakeUp>();
+            if (playerWakeUp != null)
+            {
+                playerWakeUp.WakeUpPlayer();
+            }
+            else
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);  // player woke up, reload the scene
+            }
+
             windedState = 3;
         }
         else if (breathlessTimer > reducedSpeedTime && windedState < 2)  // hasn't breathed properly for a while
